@@ -1,0 +1,1 @@
+export { ProtectedProperty } from './ProtectedProperty';
