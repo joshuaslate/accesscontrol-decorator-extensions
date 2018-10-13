@@ -1,0 +1,1 @@
+export { ProtectedResource } from './ProtectedResource';
