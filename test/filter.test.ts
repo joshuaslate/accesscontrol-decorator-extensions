@@ -24,7 +24,7 @@ const defaultPropertyOptions = {
 };
 
 describe('Filter function', () => {
-  it('should return all properties when the user has access to all properties for the given action type', () => {
+  xit('should return all properties when the user has access to all properties for the given action type', () => {
     @ProtectedResource(defaultResourceOptions)
     class FilterAllAvailable {
       @ProtectedProperty(defaultPropertyOptions)
@@ -39,7 +39,7 @@ describe('Filter function', () => {
     expect(filtered).toMatchObject(instanceToFilter);
   });
 
-  it('should object with properties filtered out if the user does not have permission to access them', () => {
+  xit('should object with properties filtered out if the user does not have permission to access them', () => {
     @ProtectedResource(defaultResourceOptions)
     class FilterNotAllAvailable {
       @ProtectedProperty(defaultPropertyOptions)
@@ -52,5 +52,29 @@ describe('Filter function', () => {
     const instanceToFilter = new FilterNotAllAvailable();
     const filtered = filterAccess(instanceToFilter, Action.CREATE, 'user');
     expect(Object.keys(filtered)).toHaveLength(0);
+  });
+
+  it('should return properties that the user has \'any\' access to when filtering for \'own\' as well', () => {
+    @ProtectedResource(defaultResourceOptions)
+    class KeepInheritedProperties {
+      @ProtectedProperty(defaultPropertyOptions)
+      public testPropA: string = 'hello';
+
+      @ProtectedProperty({
+        permissions: {
+          user: {
+            [Action.CREATE]: Scope.ANY,
+            [Action.READ]: Scope.ANY,
+            [Action.UPDATE]: Scope.ANY,
+            [Action.DELETE]: Scope.ANY,
+          },
+        },
+      })
+      public testPropB: string = 'world';
+    }
+
+    const instanceToFilter = new KeepInheritedProperties();
+    const filtered = filterAccess(instanceToFilter, Action.CREATE, 'user');
+    expect(filtered.testPropB).toBe('world');
   });
 });

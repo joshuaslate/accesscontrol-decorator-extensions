@@ -35,4 +35,10 @@ export const setGrant = (role: string, resource: string, action: Action, scope?:
   } else {
     (ac.deny(role) as any)[grantMethodName](...argsForGrant);
   }
+
+  // If "any" scope is being set, let's be sure "own" is also set so the viewer
+  // can still access their own resources
+  if (scope === Scope.ANY) {
+    setGrant(role, resource, action, Scope.OWN, field);
+  }
 };
