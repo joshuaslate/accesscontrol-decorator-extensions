@@ -1,6 +1,12 @@
 import { Action, Scope } from './';
 
-export const GRANT_METHODS = {
+type GRANT_METHODS_TYPE = {
+  [key in Action]: {
+    [scopeKey in Scope | '']: string;
+  };
+};
+
+export const GRANT_METHODS: GRANT_METHODS_TYPE = {
   [Action.CREATE]: {
     [Scope.ANY]: 'createAny',
     [Scope.OWN]: 'createOwn',
