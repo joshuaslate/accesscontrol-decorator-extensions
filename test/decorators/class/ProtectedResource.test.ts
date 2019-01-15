@@ -20,7 +20,7 @@ describe('Class Decorator: ProtectedResource', () => {
     expect(ac.getGrants().admin.FakeResourceA).toMatchObject({
       'create:any': ['*'],
       'read:any': ['*'],
-      'update:own': [],
+      'update:own': [""],
       'delete:own': ['*'],
     });
   });
