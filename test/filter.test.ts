@@ -24,7 +24,7 @@ const defaultPropertyOptions = {
 };
 
 describe('Filter function', () => {
-  xit('should return all properties when the user has access to all properties for the given action type', () => {
+  it('should return all properties when the user has access to all properties for the given action type', () => {
     @ProtectedResource(defaultResourceOptions)
     class FilterAllAvailable {
       @ProtectedProperty(defaultPropertyOptions)
@@ -39,7 +39,7 @@ describe('Filter function', () => {
     expect(filtered).toMatchObject(instanceToFilter);
   });
 
-  xit('should object with properties filtered out if the user does not have permission to access them', () => {
+  it('should object with properties filtered out if the user does not have permission to access them', () => {
     @ProtectedResource(defaultResourceOptions)
     class FilterNotAllAvailable {
       @ProtectedProperty(defaultPropertyOptions)
