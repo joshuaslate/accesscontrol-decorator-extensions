@@ -81,22 +81,39 @@ Then for actually filtering the action, you would do something like this (imagin
 import { Action, filterAccess } from 'accesscontrol-decorator-extensions';
 
 export const editUser = async (req, res) => {
-  // In this instance, a middleware prior to editUser running places the viewer on the request object
+  // In this instance, a middleware prior to editUser running places the viewer (user) on the request object
   const { body, params, user } = req;
 
-  const userToUpdate = await db.findOne(params.userId);
+  const userToUpdate = await db.user.findOne(params.userId);
 
   // Change the user's username based on data in the request body
   userToUpdate.username = body.username;
 
   // This will ensure that the user is only updating fields they have access to update
   const filteredUserUpdates: Partial<User> = filterAccess(user, Action.UPDATE, userToUpdate);
-  const savedUser = await db.save(filteredUserUpdates);
+  const savedUser = await db.user.save(filteredUserUpdates);
 
   res.json({
     success: true,
     user: savedUser,
   });
+};
+```
+
+To check if a role has access to any fields in the root-level resource for a given action, you could do something like the following:
+```ts
+import { Action, canAccess } from 'accesscontrol-decorator-extensions';
+
+export const deletePost = async (req, res) => {
+  // In this instance, a middleware prior to deletePost running places the viewer (user) on the request object
+  const { params, user } = req;
+
+  if (!canAccess(user, Action.DELETE, new Post())) {
+    throw new Error('unauthorized!');
+  }
+
+  await db.post.deleteOne(params.id);
+  res.json({ success: true });
 };
 ```
 
