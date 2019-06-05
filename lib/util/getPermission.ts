@@ -3,7 +3,7 @@ import { Action, METADATA_KEY, MISSING_ROLE_DETERMINER, MISSING_OWNERSHIP_DETERM
 import { ResourceMetadata } from '../interfaces';
 import ac from '../accesscontrol-instance';
 
-export const getPermission = <T>(itemToFilter: T, action: Action, viewer: any): Permission => {
+export const getPermission = <T extends {}>(itemToFilter: T, action: Action, viewer: any): Permission => {
   const resource = itemToFilter.constructor.name;
   const instanceMetadata: ResourceMetadata = Reflect.getMetadata(METADATA_KEY, itemToFilter.constructor);
 
